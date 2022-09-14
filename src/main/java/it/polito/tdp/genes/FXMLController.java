@@ -5,6 +5,7 @@
 package it.polito.tdp.genes;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.genes.model.Model;
@@ -37,13 +38,36 @@ public class FXMLController {
     private TextArea txtResult; // Value injected by FXMLLoader
 
     @FXML
-    void doContaArchi(ActionEvent event) {
-
+    void doContaArchi(ActionEvent event){
+    	try {
+    		double s = Double.parseDouble(txtSoglia.getText());
+    		if(s <= model.getMin() || s >= model.getMax()) {
+    			txtResult.appendText("Il valore è esterno all'intervallo ("+model.getMin()+","+model.getMax()+")\n");
+    		}else {
+    			model.contaArchi(s);
+    			txtResult.appendText("Il numero di valori maggiori"
+    					+ " e inferiori della soglia sono: "+model.getMagS()+" e "+	model.getMinS());
+    		}
+    	}catch(NumberFormatException e)
+    	{
+    	txtResult.appendText("Inserire un valore corretto numerico \n");
+    	}  
     }
 
     @FXML
     void doRicerca(ActionEvent event) {
-
+    	try {
+    		double s = Double.parseDouble(txtSoglia.getText());
+    		if(s <= model.getMin() || s >= model.getMax()) {
+    			txtResult.appendText("Il valore è esterno all'intervallo ("+model.getMin()+","+model.getMax()+")\n");
+    		}else {
+    			List<Integer> cromosomi = model.calcolaPercorsoMassimo(s);
+    		}
+    	}catch(NumberFormatException e)
+    	{
+    	txtResult.appendText("Inserire un valore corretto numerico \n");
+    	}  
+    	
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -57,6 +81,7 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model ;
+		this.model.creaGrafo();
 		
 	}
 }
